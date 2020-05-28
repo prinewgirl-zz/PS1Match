@@ -19,10 +19,36 @@ try: # Python 3.x
     import http.client as httplib 
 except ImportError:  # Python 2.x
     import httplib   
+    
+def ps1cone(ra,dec,radius,table="mean",release="dr1",format="csv",columns=None,
+           baseurl="https://catalogs.mast.stsci.edu/api/v0.1/panstarrs", 
+           verbose=False, **kw):
+    """Do a cone search of the PS1 catalog
+    
+    Parameters
+    ----------
+    ra (float): (degrees) J2000 Right Ascension
+    dec (float): (degrees) J2000 Declination
+    radius (float): (degrees) Search radius (<= 0.5 degrees)
+    table (string): mean, stack, or detection
+    release (string): dr1 or dr2
+    format: csv, votable, json
+    columns: list of column names to include (None means use defaults)
+    baseurl: base URL for the request
+    verbose: print info about request
+    **kw: other parameters (e.g., 'nDetections.min':2)
+    """
+    
+    data = kw.copy()
+    data['ra'] = ra
+    data['dec'] = dec
+    data['radius'] = radius
+    return ps1search(table=table,release=release,format=format,columns=columns,
+                    baseurl=baseurl, verbose=verbose, **data)
 
 def ps1search(table="mean",release="dr1",format="csv",columns=None,
-           baseurl="https://catalogs.mast.stsci.edu/api/v0.1/panstarrs", verbose=False,
-           **kw):
+           baseurl="https://catalogs.mast.stsci.edu/api/v0.1/panstarrs",
+           verbose=False, **kw):
     """Do a general search of the PS1 catalog (possibly without ra/dec/radius)
     
     Parameters
@@ -54,7 +80,8 @@ def ps1search(table="mean",release="dr1",format="csv",columns=None,
             if col.lower().strip() not in dcols:
                 badcols.append(col)
         if badcols:
-            raise ValueError('Some columns not found in table: {}'.format(', '.join(badcols)))
+            raise ValueError('Some columns not found in table: {} \
+                             '.format(', '.join(badcols)))
         # two different ways to specify a list of column values in the API
         # data['columns'] = columns
         data['columns'] = '[{}]'.format(','.join(columns))

@@ -2,12 +2,8 @@ from astropy.io import ascii
 from astropy.table import Table
 
 import sys
-import re
-import numpy as np
-import pylab
 import json
 import requests
-
 try: # Python 3.x
     from urllib.parse import quote as urlencode
     from urllib.request import urlretrieve
@@ -20,6 +16,13 @@ try: # Python 3.x
 except ImportError:  # Python 2.x
     import httplib   
     
+##############################################################################
+##                                                                          ##
+## This code was strongly inspirated by this notebook:                      ##
+## http://ps1images.stsci.edu/ps1_dr2_api.html                              ##
+##                                                                          ##
+##############################################################################
+
 def ps1cone(ra,dec,radius,table="mean",release="dr1",format="csv",columns=None,
            baseurl="https://catalogs.mast.stsci.edu/api/v0.1/panstarrs", 
            verbose=False, **kw):

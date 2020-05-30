@@ -1,6 +1,8 @@
 import lib
 import sys
 from astropy.table import Table
+from requests.exceptions import ConnectionError
+
 #verificar se é arquivo sys.argv[1] é um arquivo
 data =  Table.read(sys.argv[1]).to_pandas()
 data.columns = map(str.lower, data.columns)
@@ -14,18 +16,22 @@ f = open(fwrite,"w+")
 columns = """objID,raMean,decMean,nDetections,ng,nr,ni,nz,ny,
     gMeanPSFMag,rMeanPSFMag,iMeanPSFMag,zMeanPSFMag,yMeanPSFMag""".split(',')
 columns = [x.strip() for x in columns]
-columns = [x for x in columns if x and not x.startswith('#')]
+columns = [x for x in columns if x and not x.startswith('#')]                                                 
 
 for index, row in data.iterrows():
-    ra = row['ra']
-    dec = row['dec']
-    results = lib.ps1cone(ra,dec,radius,release='dr2',columns=columns,
-                          verbose=True,**constraints)
-    lines = results.split('\n')
-    print(len(lines),"rows in results -- first 5 rows:")
-    print('\n'.join(lines[:6]))
-    
-    for line in lines:
-        f.write(line)
-
-    
+    results = None
+    while results is None:
+        try: 
+            ra = row['ra']
+            dec = row['dec']
+            results = lib.ps1cone(ra,dec,radius,release='dr2',columns=columns,
+                                  verbose=True,**constraints)
+            lines = results.split('\n')
+            print(len(lines),"rows in results -- first 5 rows:")
+            print('\n'.join(lines[:6]))  
+            for line in lines:
+                f.write(line)
+        except ConnectionError: 
+            print("Connection Error" )
+            print("Retrying...")
+                

@@ -49,8 +49,8 @@ for index, row in data.iterrows():
             results = lib.ps1cone(ra,dec,radius,release=release,table=table,
                                   columns=columns, verbose=False,**constraints)
             lines = results.split('\n')
-            print(len(lines),"rows in results -- first 5 rows:")
-            print('\n'.join(lines[1:6]))  
+            print(len(lines)-1,"rows in results -- first 5 rows:")
+            #print('\n'.join(lines[1:6]))  
             f.write('\n'.join(lines[1:]))
         except ConnectionError: 
             print("Connection Error" )

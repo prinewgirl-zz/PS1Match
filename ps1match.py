@@ -1,7 +1,6 @@
 import lib
-import sys
 from astropy.table import Table
-from requests.exceptions import ConnectionError
+from requests.exceptions import ConnectionError, Timeout, ConnectTimeout
 import configparser
 import os
 config = configparser.ConfigParser()
@@ -34,9 +33,8 @@ constraints = {key:value}
 fwrite = output
 f = open(fwrite,"w+")
 # strip blanks and weed out blank and commented-out values
-
 print("Starting....")
-f.write(columns + '\n')
+f.write(columns.replace("\n"," ") + "\n")
 columns = columns.split(',\n')
 columns = [x.strip() for x in columns]
 columns = [x for x in columns if x and not x.startswith('#')]                                                 
@@ -55,4 +53,13 @@ for index, row in data.iterrows():
         except ConnectionError: 
             print("Connection Error" )
             print("Retrying...")
+        except Timeout:
+            print("Connection Error" )
+            print("Retrying...")
+        except ConnectTimeout:
+            print("Connection Error" )
+            print("Retrying...")
+            
+            
+
                 

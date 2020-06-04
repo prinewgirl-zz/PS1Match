@@ -2,7 +2,7 @@ import lib
 from astropy.table import Table
 from requests.exceptions import ConnectionError, Timeout, ConnectTimeout
 import configparser
-import os
+import os, sys
 config = configparser.ConfigParser()
 
 ###################################################################
@@ -23,7 +23,6 @@ value                     = config.get(       "Query","value")
 ###################################################################
 # 
 ###################################################################
-
 #verificar se é arquivo sys.argv[1] é um arquivo
 data =  Table.read(file).to_pandas()
 data.columns = map(str.lower, data.columns)
@@ -54,12 +53,17 @@ for index, row in data.iterrows():
             print("Connection Error" )
             print("Retrying...")
         except Timeout:
-            print("Connection Error" )
+            print("Timeout Error" )
             print("Retrying...")
         except ConnectTimeout:
-            print("Connection Error" )
+            print("Timeout Error" )
+            print("Retrying...")  
+        except ValueError as v:
+            print(v)
+            print("Some bad cols, exiting..." )
+            sys.exit()
+        except KeyboardInterrupt:
+            sys.exit()
+        except:
+            print("Unknow error..")
             print("Retrying...")
-            
-            
-
-                

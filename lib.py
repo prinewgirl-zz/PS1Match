@@ -91,7 +91,7 @@ def ps1search(table="mean",release="dr1",format="csv",columns=None,
 
 # either get or post works
 #    r = requests.post(url, data=data)
-    r = requests.get(url, params=data)
+    r = requests.get(url, params=data,timeout=(5,5))
 
     if verbose:
         print(r.url)
@@ -134,7 +134,7 @@ def ps1metadata(table="mean",release="dr1",
     
     checklegal(table,release)
     url = "{baseurl}/{release}/{table}/metadata".format(**locals())
-    r = requests.get(url)
+    r = requests.get(url,timeout=(5,5))
     r.raise_for_status()
     v = r.json()
     # convert to astropy table

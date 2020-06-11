@@ -65,5 +65,5 @@ for index, row in data.iterrows():
         except KeyboardInterrupt:
             sys.exit()
         except:
-            print("Unknow error..")
+            print("Unknown error..")
             print("Retrying...")

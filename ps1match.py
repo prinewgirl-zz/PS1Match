@@ -1,4 +1,4 @@
-import lib
+import lib.functions as lib
 from astropy.table import Table
 from requests.exceptions import ConnectionError, Timeout, ConnectTimeout
 import configparser

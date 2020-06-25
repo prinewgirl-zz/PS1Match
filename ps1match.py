@@ -46,15 +46,16 @@ i = 0
 j = 0
 
 for index, row in data.iterrows():
-    array[i]= row['ra'] 
-    array[i+1] = row['dec']
-    i += 2
+    array[i][0]= row['ra'] 
+    array[i][1] = row['dec']
+    i += 1
 
 array = array.reshape(length,2)
 
 if (os.path.exists(sys.argv[2]) == True):
     fopen = open(sys.argv[2],"r")
     j = int(fopen.readline())
+    j += 1
     fopen.close()
 print(str(j))                        
 for line in range(j,length):

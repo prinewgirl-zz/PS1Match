@@ -48,7 +48,7 @@ j = 0
 for index, row in data.iterrows():
     array[i] = row['ra'] 
     array[i+1]  = row['dec']
-    i += 2
+    i += 1
 
 array = array.reshape(length,2)
 
